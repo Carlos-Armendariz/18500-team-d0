@@ -42,25 +42,32 @@ def scan_matrix(rows, cols):
         col.on()
 
     char_dict = create_chardict()
-
-
+    prevSeen = set()
+    print("Running matrix scanning")
     while True:
-        time.sleep(0.5)
+        time.sleep(0.001)
         seen = set()
         for i, col in enumerate(cols):
             col.off()
             for j, row in enumerate(rows):
                 if (row.value):
                     seen.add((j,i))
+                elif (j,i) in prevSeen:
+                    prevSeen.remove((j,i))
             col.on()
+            time.sleep(0.001)
    
         if len(seen) > 0:
             print_val = ""
             for pair in seen:
-                print_val += str(char_dict[pair])
-                send_key(char_dict[pair])
-            print(print_val)
-            print("----------")
+                if pair not in prevSeen:
+                    print(prevSeen, pair)
+                    prevSeen.add(pair)
+                    #print_val += str(char_dict[pair])
+                    send_key(char_dict[pair])
+ 
+            # print(print_val)
+            # print("----------")
 
 def main():
 
