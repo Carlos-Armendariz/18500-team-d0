@@ -6,7 +6,7 @@ from gpiozero import DigitalOutputDevice as OUT
 import time
 from keycodes import Keycodes
 
-
+NULL_CHAR = chr(0)
 
 def write_report(report):
     with open('/dev/hidg0', 'rb+') as fd:
@@ -14,11 +14,22 @@ def write_report(report):
 
 
 def send_key(key):
-    NULL_CHAR = chr(0)
+    #NULL_CHAR = chr(0)
 
-    write_report(chr(32)+NULL_CHAR+chr(key)+NULL_CHAR*5)
+    if (key == Keycodes.D):
+        write_report(NULL_CHAR*8)
+
+    else:
+        write_report(chr(32)+NULL_CHAR+chr(key)+NULL_CHAR*5)
+
+
     # Release all keys
+    #write_report(NULL_CHAR*8)
+
+def release_key():
     write_report(NULL_CHAR*8)
+
+
     
 
 def create_chardict():
@@ -49,11 +60,14 @@ def scan_matrix(rows, cols):
         seen = set()
         for i, col in enumerate(cols):
             col.off()
-            for j, row in enumerate(rows):
+            for j, row in enumerate(rows): 
                 if (row.value):
                     seen.add((j,i))
+                    
                 elif (j,i) in prevSeen:
                     prevSeen.remove((j,i))
+                    release_key()
+
             col.on()
             time.sleep(0.001)
    
@@ -61,9 +75,7 @@ def scan_matrix(rows, cols):
             print_val = ""
             for pair in seen:
                 if pair not in prevSeen:
-                    print(prevSeen, pair)
                     prevSeen.add(pair)
-                    #print_val += str(char_dict[pair])
                     send_key(char_dict[pair])
  
             # print(print_val)
@@ -72,7 +84,7 @@ def scan_matrix(rows, cols):
 def main():
 
     rows = [IN(5, pull_up=True), IN(6, pull_up=True)]
-    cols = [OUT(20), OUT(21)]
+    cols = [OUT(14), OUT(15)]
 
     scan_matrix(rows, cols)
 
