@@ -13,30 +13,31 @@ def write_report(report):
         fd.write(report.encode())
 
 
-def send_key(key):
-    #NULL_CHAR = chr(0)
+def send_report(seen, prevSeen):
 
-    if (key == Keycodes.D):
-        write_report(NULL_CHAR*8)
+    char_dict = create_chardict()
+    curr_report = chr(32) + NULL_CHAR
 
-    else:
-        write_report(chr(32)+NULL_CHAR+chr(key)+NULL_CHAR*5)
+    for pair in seen:
+        if pair not in prevSeen:
+            prevSeen.add(pair)
+        curr_report += chr(char_dict[pair])
 
+    while len(curr_report) < 8:
+        curr_report += NULL_CHAR
+    
+    write_report(curr_report)
 
-    # Release all keys
-    #write_report(NULL_CHAR*8)
 
 def release_key():
     write_report(NULL_CHAR*8)
-
-
     
 
 def create_chardict():
     char_dict = dict()
-    char_dict[(0,0)] = Keycodes.A
-    char_dict[(0,1)] = Keycodes.B
-    char_dict[(1,0)] = Keycodes.C
+    char_dict[(0,0)] = Keycodes.W
+    char_dict[(0,1)] = Keycodes.A
+    char_dict[(1,0)] = Keycodes.S
     char_dict[(1,1)] = Keycodes.D
 
 
@@ -52,7 +53,6 @@ def scan_matrix(rows, cols):
     for col in cols:
         col.on()
 
-    char_dict = create_chardict()
     prevSeen = set()
     print("Running matrix scanning")
     while True:
@@ -73,13 +73,9 @@ def scan_matrix(rows, cols):
    
         if len(seen) > 0:
             print_val = ""
-            for pair in seen:
-                if pair not in prevSeen:
-                    prevSeen.add(pair)
-                    send_key(char_dict[pair])
- 
-            # print(print_val)
-            # print("----------")
+
+            send_report(seen, prevSeen)
+
 
 def main():
 
