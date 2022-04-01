@@ -56,7 +56,7 @@ def scan_matrix(rows, cols):
     prevSeen = set()
     print("Running matrix scanning")
     while True:
-        time.sleep(0.001)
+        #time.sleep(0.001)
         seen = set()
         for i, col in enumerate(cols):
             col.off()
