@@ -45,4 +45,4 @@ echo "Keyboard configuration" > configs/c.1/strings/0x409/configuration
 ln -s functions/hid.usb0 configs/c.1
 
 # Enable gadget
-#ls /sys/class/udc > UDC
+ls /sys/class/udc > UDC

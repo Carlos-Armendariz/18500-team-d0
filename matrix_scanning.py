@@ -17,6 +17,9 @@ def write_report(report):
         fd.write(report.encode())
 
 
+# clear UDC to unbind
+# need to save name of UDC so that new device can have it written to UDC file
+
 def send_mouse_report(seen, prevSeen):
 
     char_dict = create_chardict()
@@ -94,7 +97,7 @@ def scan_matrix(rows, cols):
    
         if len(seen) > 0:
             print_val = ""
-            send_mouse_report(seen, prevSeen)
+            #send_mouse_report(seen, prevSeen)
             send_keyboard_report(seen, prevSeen)
 
 
