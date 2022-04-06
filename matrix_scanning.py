@@ -3,11 +3,15 @@
 from gpiozero import DigitalInputDevice as IN
 from gpiozero import DigitalOutputDevice as OUT
 
+import usb_hid
+from adafruit_hid.keyboard import Keyboard
+from adafruit_hid.mouse import Mouse
+
 import time
 from keycodes import Keycodes
 
 NULL_CHAR = chr(0)
-
+m = Mouse(usb_hid.devices)
 def write_report(report):
     with open('/dev/hidg0', 'rb+') as fd:
         fd.write(report.encode())
@@ -21,11 +25,14 @@ def send_report(seen, prevSeen):
     for pair in seen:
         if pair not in prevSeen:
             prevSeen.add(pair)
-        curr_report += chr(char_dict[pair])
+        if (pair) == (0,0):
+            m.click(Mouse.LEFT_BUTTON)
+        else:
+            curr_report += chr(char_dict[pair])
 
     while len(curr_report) < 8:
         curr_report += NULL_CHAR
-    
+     
     write_report(curr_report)
 
 
@@ -47,7 +54,6 @@ def create_chardict():
 Matrix Scanning: set cols to low and see if each row if low
 if row low, key in (row,col) is pressed
 """
-
 def scan_matrix(rows, cols):
  
     for col in cols:
