@@ -37,7 +37,7 @@ mkdir configs/c.1/strings/0x409
 
 echo 0x80 > configs/c.1/bmAttributes
 echo 200 > configs/c.1/MaxPower # 200 mA
-echo "Example configuration" > configs/c.1/strings/0x409/configuration
+echo "Keyboard configuration" > configs/c.1/strings/0x409/configuration
 
 # Link HID function to configuration
 ln -s functions/hid.usb0 configs/c.1
