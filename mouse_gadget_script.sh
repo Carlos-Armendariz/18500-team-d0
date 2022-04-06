@@ -39,4 +39,4 @@ echo 200 > configs/c.1/MaxPower
 
 ln -s functions/hid.usb0 configs/c.1/
 
-ls /sys/class/udc > UDC
+#ls /sys/class/udc > UDC

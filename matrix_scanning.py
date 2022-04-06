@@ -3,21 +3,21 @@
 from gpiozero import DigitalInputDevice as IN
 from gpiozero import DigitalOutputDevice as OUT
 
-import usb_hid
-from adafruit_hid.keyboard import Keyboard
-from adafruit_hid.mouse import Mouse
+#import usb_hid
+#from adafruit_hid.keyboard import Keyboard
+#from adafruit_hid.mouse import Mouse
 
 import time
 from keycodes import Keycodes
 
 NULL_CHAR = chr(0)
-m = Mouse(usb_hid.devices)
+#m = Mouse(usb_hid.devices)
 def write_report(report):
     with open('/dev/hidg0', 'rb+') as fd:
         fd.write(report.encode())
 
 
-def send_report(seen, prevSeen):
+def send_mouse_report(seen, prevSeen):
 
     char_dict = create_chardict()
     curr_report = chr(32) + NULL_CHAR
@@ -26,9 +26,24 @@ def send_report(seen, prevSeen):
         if pair not in prevSeen:
             prevSeen.add(pair)
         if (pair) == (0,0):
-            m.click(Mouse.LEFT_BUTTON)
-        else:
-            curr_report += chr(char_dict[pair])
+            curr_report += chr(0x4) # LEFT CLICK
+
+    while len(curr_report) < 3:
+        curr_report = NULL_CHAR + curr_report
+     
+    write_report(curr_report)
+
+
+def send_keyboard_report(seen, prevSeen):
+
+    char_dict = create_chardict()
+    curr_report = chr(32) + NULL_CHAR
+
+    for pair in seen:
+        if pair not in prevSeen:
+            prevSeen.add(pair)
+        
+        curr_report += chr(char_dict[pair])
 
     while len(curr_report) < 8:
         curr_report += NULL_CHAR
@@ -79,8 +94,8 @@ def scan_matrix(rows, cols):
    
         if len(seen) > 0:
             print_val = ""
-
-            send_report(seen, prevSeen)
+            send_mouse_report(seen, prevSeen)
+            send_keyboard_report(seen, prevSeen)
 
 
 def main():

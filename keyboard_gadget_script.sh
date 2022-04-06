@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #SOURCE: https://gist.github.com/rmed/0d11b7225b3b772bb0dd89108ee93df0
 
 # Create gadget
@@ -43,4 +45,4 @@ echo "Keyboard configuration" > configs/c.1/strings/0x409/configuration
 ln -s functions/hid.usb0 configs/c.1
 
 # Enable gadget
-ls /sys/class/udc > UDC
+#ls /sys/class/udc > UDC
