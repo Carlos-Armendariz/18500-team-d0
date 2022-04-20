@@ -18,16 +18,6 @@ MOUSE_WAIT_TIME = 0.26
 
 CURR_DEVICE = KEYBOARD_DEVICE_NUM
 
-def switch_to_mouse():
-    if (CURR_DEVICE == KEYBOARD_DEVICE_NUM):
-        CURR_DEVICE = MOUSE_DEVICE_NUM
-        subprocess.call(['sh', './switch_to_mouse.sh'])
-    return
-
-def switch_to_keyboard():
-    if (CURR_DEVICE == MOUSE_DEVICE_NUM):
-        CURR_DEVICE = KEYBOARD_DEVICE_NUM
-        subprocess.call(['sh', './switch_to_keyboard.sh'])
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
@@ -69,6 +59,20 @@ def send_report(device, seen, prevSeen):
      
     write_report(device, curr_report)
 
+
+def switch_to_mouse():
+    global CURR_DEVICE
+    if (CURR_DEVICE == KEYBOARD_DEVICE_NUM):
+        CURR_DEVICE = MOUSE_DEVICE_NUM
+        subprocess.call(['sh', './switch_to_mouse.sh'])
+    return
+
+def switch_to_keyboard():
+    global CURR_DEVICE
+    if (CURR_DEVICE == MOUSE_DEVICE_NUM):
+        CURR_DEVICE = KEYBOARD_DEVICE_NUM
+        subprocess.call(['sh', './switch_to_keyboard.sh'])
+
 def release_key():
     switch_to_keyboard()
     # time.sleep(MOUSE_WAIT_TIME)
@@ -76,7 +80,7 @@ def release_key():
 
 def release_mouse():
     switch_to_mouse()
-    time.sleep(MOUSE_WAIT_TIME)
+    # time.sleep(MOUSE_WAIT_TIME)
     write_report(MOUSE_DEVICE_NUM, NULL_CHAR*MOUSE_REPORT_LEN)
     # switch_to_keyboard()
 
@@ -100,7 +104,7 @@ def scan_matrix(rows, cols):
             col.off()
             for j, row in enumerate(rows): 
                 if (row.value):
-                    if (j,i) == (0,1):        
+                    if (j,i) == (0,1):
                         mouse_seen.add((j,i))
                     else:
                         keyboard_seen.add((j,i))
@@ -111,7 +115,6 @@ def scan_matrix(rows, cols):
                     mouse_prevSeen.remove((j,i))
                     release_mouse()
 
-
             col.on()
             time.sleep(0.001)
    
@@ -121,7 +124,7 @@ def scan_matrix(rows, cols):
         
         if len(mouse_seen) > 0:
             switch_to_mouse()
-            time.sleep(MOUSE_WAIT_TIME)
+            # time.sleep(MOUSE_WAIT_TIME)
             send_report(MOUSE_DEVICE_NUM, mouse_seen, mouse_prevSeen)
             # switch_to_keyboard()
 
