@@ -3,7 +3,7 @@
 # based on:
 
 class Keycodes:
-
+    NULL = 0x0
     A   =0x4
     B   =0x5
     C   =0x6
