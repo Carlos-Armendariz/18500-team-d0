@@ -61,7 +61,7 @@ def release_mouse():
 Matrix Scanning: set cols to low and see if each row if low
 if row low, key in (row,col) is pressed
 """
-def scan_matrix(rows, cols):
+def scan_matrix(rows, cols, mouse_buttons):
  
     for col in cols:
         col.on()
@@ -75,10 +75,19 @@ def scan_matrix(rows, cols):
         mouse_seen = set()
         for i, col in enumerate(cols):
             col.off()
-            for j, row in enumerate(rows): 
+            for j, row in enumerate(rows):
+                if (j,i) == (1,0): # right click
+                    if row.value:
+                        mouse_buttons[0].on()
+                    else:
+                        mouse_buttons[0].off()
+                elif (j,i) == (2,0): # left click
+                    if row.value:
+                        mouse_buttons[1].on()
+                    else:
+                        mouse_buttons[1].off()
                 if (row.value):
                     keyboard_seen.add((j,i))
-                    # print("SAW KEY")
                 elif (j,i) in keyboard_prevSeen:
                     keyboard_prevSeen.remove((j,i))
                     release_key()
@@ -88,9 +97,7 @@ def scan_matrix(rows, cols):
    
         if len(keyboard_seen) > 0:
             send_report(KEYBOARD_DEVICE_NUM, keyboard_seen, keyboard_prevSeen)
-        
-        # if len(mouse_seen) > 0:
-        #     send_report(MOUSE_DEVICE_NUM, mouse_seen, mouse_prevSeen)
+
 
 def main():
 
@@ -99,14 +106,16 @@ def main():
     
     cols = [OUT(9), OUT(11), OUT(0), OUT(5),
             OUT(6), OUT(13), OUT(19), OUT(26)]
+    
+    mouse_buttons = [OUT(20), OUT(21)]
 
-    scan_matrix(rows, cols)
+    scan_matrix(rows, cols, mouse_buttons)
 
 
 def create_chardict():
     char_dict = dict()
     char_dict[(0,0)] = Keycodes.NULL #does not exist
-    char_dict[(0,1)] = Keycodes.NULL # left click
+    char_dict[(0,1)] = Keycodes.B
     char_dict[(0,2)] = Keycodes.C
     char_dict[(0,3)] = Keycodes.D
     char_dict[(0,4)] = Keycodes.E
@@ -114,7 +123,7 @@ def create_chardict():
     char_dict[(0,6)] = Keycodes.G
     char_dict[(0,7)] = Keycodes.H # ESCAPE KEY
 
-    char_dict[(1,0)] = Keycodes.I
+    char_dict[(1,0)] = Keycodes.NULL # RIGHT CLICK
     char_dict[(1,1)] = Keycodes.J
     char_dict[(1,2)] = Keycodes.K
     char_dict[(1,3)] = Keycodes.L
@@ -123,7 +132,7 @@ def create_chardict():
     char_dict[(1,6)] = Keycodes.O
     char_dict[(1,7)] = Keycodes.P
 
-    char_dict[(2,0)] = Keycodes.Q
+    char_dict[(2,0)] = Keycodes.NULL # LEFT CLICK
     char_dict[(2,1)] = Keycodes.R
     char_dict[(2,2)] = Keycodes.S
     char_dict[(2,3)] = Keycodes.T
