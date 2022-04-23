@@ -121,51 +121,51 @@ def create_chardict():
     char_dict[(0,4)] = Keycodes.M
     char_dict[(0,5)] = Keycodes.F
     char_dict[(0,6)] = Keycodes.P
-    char_dict[(0,7)] = Keycodes.ESC # ESCAPE KEY
+    char_dict[(0,7)] = Keycodes.ESC
 
     char_dict[(1,0)] = Keycodes.NULL # RIGHT CLICK
     char_dict[(1,1)] = Keycodes.Z
     char_dict[(1,2)] = Keycodes.O
     char_dict[(1,3)] = Keycodes.R
-    char_dict[(1,4)] = Keycodes.S
-    char_dict[(1,5)] = Keycodes.U
-    char_dict[(1,6)] = Keycodes.Y
+    char_dict[(1,4)] = Keycodes.S # 7
+    char_dict[(1,5)] = Keycodes.U # 8
+    char_dict[(1,6)] = Keycodes.Y # 9
     char_dict[(1,7)] = Keycodes.BKSPC
 
     char_dict[(2,0)] = Keycodes.NULL # LEFT CLICK
     char_dict[(2,1)] = Keycodes.A
     char_dict[(2,2)] = Keycodes.E
     char_dict[(2,3)] = Keycodes.H
-    char_dict[(2,4)] = Keycodes.T
-    char_dict[(2,5)] = Keycodes.D
-    char_dict[(2,6)] = Keycodes.B
+    char_dict[(2,4)] = Keycodes.T #4
+    char_dict[(2,5)] = Keycodes.D #5
+    char_dict[(2,6)] = Keycodes.B #5
     char_dict[(2,7)] = Keycodes.ENTER
 
     char_dict[(3,0)] = Keycodes.SPACE
     char_dict[(3,1)] = Keycodes.X
     char_dict[(3,2)] = Keycodes.I
     char_dict[(3,3)] = Keycodes.N
-    char_dict[(3,4)] = Keycodes.C
-    char_dict[(3,5)] = Keycodes.K
-    char_dict[(3,6)] = Keycodes.G
+    char_dict[(3,4)] = Keycodes.C # 1
+    char_dict[(3,5)] = Keycodes.K # 2
+    char_dict[(3,6)] = Keycodes.G # 3
     char_dict[(3,7)] = Keycodes.NULL # SHIFT
 
-    char_dict[(4,0)] = Keycodes.NULL # PERIOD
-    char_dict[(4,1)] = Keycodes.NULL # EXCLAMATION
-    char_dict[(4,2)] = Keycodes.NULL # LEFT BRACKETS
-    char_dict[(4,3)] = Keycodes.NULL # RIGHT BRACKETS
-    char_dict[(4,4)] = Keycodes.NULL # SEMICOLON
-    char_dict[(4,5)] = Keycodes.W
+    char_dict[(4,0)] = Keycodes.PERIOD
+    char_dict[(4,1)] = Keycodes.NULL # ! and ? are shift+1 and shift+/
+    char_dict[(4,2)] = Keycodes.L_BRACK
+    char_dict[(4,3)] = Keycodes.R_BRACK
+    char_dict[(4,4)] = Keycodes.SEMICOLON # SEMICOLON
+    char_dict[(4,5)] = Keycodes.W # 0
     char_dict[(4,6)] = Keycodes.V
     char_dict[(4,7)] = Keycodes.NULL # NUM LOCK
 
-    char_dict[(5,0)] = Keycodes.I   # COMMA/QUOTES
+    char_dict[(5,0)] = Keycodes.APOSTROPHE   # APOSTROPHE/QUOTES
     char_dict[(5,1)] = Keycodes.J   # does not exist
     char_dict[(5,2)] = Keycodes.K   # does not exist
     char_dict[(5,3)] = Keycodes.L   # does not exist
     char_dict[(5,4)] = Keycodes.M   # does not exist
-    char_dict[(5,5)] = Keycodes.N   # does not exist
-    char_dict[(5,6)] = Keycodes.O
+    char_dict[(5,5)] = Keycodes.N   # alt
+    char_dict[(5,6)] = Keycodes.O   # CTRL
     char_dict[(5,7)] = Keycodes.P # TOGGLE KEY
 
     return char_dict
