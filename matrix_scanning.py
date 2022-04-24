@@ -32,11 +32,8 @@ SHIFT_TOGGLE = False
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
-    try:
-        with open(filepath, 'rb+') as fd:
+    with open(filepath, 'rb+') as fd:
             fd.write(report.encode())
-    except:
-        print("Failed to open ", filepath)
 
 def send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPressed, ctrlPressed, altPressed):
 
@@ -137,16 +134,12 @@ def scan_matrix(rows, cols):
 
                         if (j,i) == NUM_LOCK_IDX:
                             NUM_LOCK = not NUM_LOCK # toggle  on key release
-                            print("NUM_LOCK", NUM_LOCK)
                         elif (j,i) == TOGGLE_IDX:
                             HOLD_TOGGLE = not HOLD_TOGGLE # toggle  on key release
                             if (HOLD_TOGGLE):
                                 SHIFT_TOGGLE = False
-                            print("Hold toggle: ", HOLD_TOGGLE)
-                            print("Shift toggle: ", SHIFT_TOGGLE)
                         elif (j,i) == SHIFT_KEY_IDX and HOLD_TOGGLE:
                             SHIFT_TOGGLE = not SHIFT_TOGGLE
-                            print("Shift toggle: ", SHIFT_TOGGLE)
                         
                         release_key()
 
