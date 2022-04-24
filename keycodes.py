@@ -50,8 +50,8 @@ class Keycodes:
 
     APOSTROPHE = 0x34
     PERIOD = 0X37
-    L_BRACK = 0X24
-    R_BRACK = 0X20
+    L_BRACK = 0X2f
+    R_BRACK = 0X30
     SEMICOLON = 0X33
 
     L_SHIFT = 0xE1
