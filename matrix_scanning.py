@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from turtle import begin_fill
 from gpiozero import DigitalInputDevice as IN
 from gpiozero import DigitalOutputDevice as OUT
 import time
@@ -16,10 +15,13 @@ MOUSE_REPORT_LEN = 3
 
 CURR_DEVICE = KEYBOARD_DEVICE_NUM
 
-L_CLICK_IDX = (2,0)
 R_CLICK_IDX = (1,0)
+L_CLICK_IDX = (2,0)
 SHIFT_KEY_IDX = (3,7)
 NUM_LOCK_IDX = (4,7)
+ALT_IDX = (5,5)
+CTRL_IDX = (5,6)
+TOGGLE_IDX = (5,7)
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
@@ -29,12 +31,9 @@ def write_report(device, report):
     except:
         print("Failed to open ", filepath)
 
-def send_report(seen, prevSeen, shiftPressed):
+def send_report(seen, prevSeen, modifier_byte):
     char_dict = create_chardict()
-    if (shiftPressed):
-        keyboard_report = chr(0x1) + NULL_CHAR
-    else:
-        keyboard_report = chr(0) + NULL_CHAR
+    keyboard_report = chr(modifier_byte) + NULL_CHAR
 
     l_click_pressed = False
     r_click_pressed = False
@@ -104,9 +103,14 @@ def scan_matrix(rows, cols):
 
             col.on()
             time.sleep(0.001)
+
+        if (shiftPressed):
+            modifier_byte = chr(0x2)
+        else:
+            modifier_byte = chr(0)
    
         if len(seen) > 0:
-            send_report(seen, prevSeen, shiftPressed)
+            send_report(seen, prevSeen, modifier_byte)
 
 
 def create_chardict():
@@ -161,9 +165,9 @@ def create_chardict():
     char_dict[(5,2)] = Keycodes.K   # does not exist
     char_dict[(5,3)] = Keycodes.L   # does not exist
     char_dict[(5,4)] = Keycodes.M   # does not exist
-    char_dict[(5,5)] = Keycodes.NULL   # alt
-    char_dict[(5,6)] = Keycodes.NULL   # CTRL
-    char_dict[(5,7)] = Keycodes.NULL # TOGGLE KEY
+    char_dict[ALT_IDX] = Keycodes.NULL   # alt
+    char_dict[CTRL_IDX] = Keycodes.NULL   # CTRL
+    char_dict[TOGGLE_IDX] = Keycodes.NULL # TOGGLE KEY
 
     return char_dict
 
