@@ -129,6 +129,10 @@ def scan_matrix(rows, cols):
                     if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
                         release_mouse()
                     else:
+                        if (j,i) == NUM_LOCK_IDX:
+                            global NUM_LOCK
+                            NUM_LOCK = not NUM_LOCK # toggle NUM_LOCK on key release
+                        
                         release_key()
 
             col.on()
