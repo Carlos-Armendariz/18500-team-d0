@@ -4,6 +4,7 @@ from gpiozero import DigitalInputDevice as IN
 from gpiozero import DigitalOutputDevice as OUT
 import time
 from keycodes import Keycodes
+from mouse_receiver import RIGHT_CLICK
 
 NULL_CHAR = chr(0)
 
@@ -14,6 +15,9 @@ MOUSE_DEVICE_NUM = 1
 MOUSE_REPORT_LEN = 3
 
 CURR_DEVICE = KEYBOARD_DEVICE_NUM
+
+L_CLICK_IDX = (2,0)
+R_CLICK_IDX = (1,0)
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
@@ -26,29 +30,41 @@ def write_report(device, report):
 
 # clear UDC to unbind
 # need to save name of UDC so that new device can have it written to UDC file
-def send_report(device, seen, prevSeen):
-    max_len = 0
-    if (device == MOUSE_DEVICE_NUM):
-        max_len = MOUSE_REPORT_LEN
-    elif (device == KEYBOARD_DEVICE_NUM):
-        max_len = KEYBOARD_REPORT_LEN
+def send_report(seen, prevSeen):
 
     char_dict = create_chardict()
 
-    if (device == MOUSE_DEVICE_NUM):
-        curr_report = chr(32) + NULL_CHAR
-    else:
-        curr_report = chr(0) + NULL_CHAR
-        
+    
+    keyboard_report = chr(0) + NULL_CHAR
+
+    l_click_pressed = False
+    r_click_pressed = False
     for pair in seen:
         prevSeen.add(pair)
-        if (len(curr_report) < max_len):
-            curr_report += chr(char_dict[pair])
+        curr_char = char_dict[pair]
+        if (pair == L_CLICK_IDX):
+            l_click_pressed = True
+        elif (pair == R_CLICK_IDX):
+            r_click_pressed = True
+        else:
+            if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
+                keyboard_report += chr(curr_char)
 
-    while len(curr_report) < max_len:
-        curr_report += NULL_CHAR
-     
-    write_report(device, curr_report)
+    while len(keyboard_report) < KEYBOARD_REPORT_LEN:
+        keyboard_report += NULL_CHAR
+
+    write_report(KEYBOARD_DEVICE_NUM, keyboard_report)
+
+    if (l_click_pressed and r_click_pressed):
+        mouse_report = chr(0x3) + (NULL_CHAR*2)
+    elif (l_click_pressed):
+        mouse_report = chr(0x1) + (NULL_CHAR*2)
+    elif (r_click_pressed):
+        mouse_report = chr(0x2) + (NULL_CHAR*2)
+    else:
+        mouse_report = NULL_CHAR * MOUSE_REPORT_LEN
+
+    write_report(MOUSE_DEVICE_NUM, mouse_report)
 
 
 def release_key():
@@ -67,36 +83,37 @@ def scan_matrix(rows, cols, mouse_buttons):
         col.on()
 
     print("Running matrix scanning")
-    keyboard_prevSeen = set()
-    mouse_prevSeen = set()
+    prevSeen = set()
     while True:
         #time.sleep(0.001)
-        keyboard_seen = set()
-        mouse_seen = set()
+        seen = set()
         for i, col in enumerate(cols):
             col.off()
             for j, row in enumerate(rows):
-                if (j,i) == (1,0): # right click
-                    if row.value:
-                        mouse_buttons[0].on()
-                    else:
-                        mouse_buttons[0].off()
-                elif (j,i) == (2,0): # left click
-                    if row.value:
-                        mouse_buttons[1].on()
-                    else:
-                        mouse_buttons[1].off()
+                # if (j,i) == (1,0): # right click
+                #     if row.value:
+                #         mouse_buttons[0].on()
+                #     else:
+                #         mouse_buttons[0].off()
+                # elif (j,i) == (2,0): # left click
+                #     if row.value:
+                #         mouse_buttons[1].on()
+                #     else:
+                #         mouse_buttons[1].off()
                 if (row.value):
-                    keyboard_seen.add((j,i))
-                elif (j,i) in keyboard_prevSeen:
-                    keyboard_prevSeen.remove((j,i))
-                    release_key()
+                    seen.add((j,i))
+                elif (j,i) in prevSeen:
+                    prevSeen.remove((j,i))
+                    if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
+                        release_mouse()
+                    else:
+                        release_key()
 
             col.on()
             time.sleep(0.001)
    
-        if len(keyboard_seen) > 0:
-            send_report(KEYBOARD_DEVICE_NUM, keyboard_seen, keyboard_prevSeen)
+        if len(seen) > 0:
+            send_report(seen, prevSeen)
 
 
 def main():
@@ -123,7 +140,7 @@ def create_chardict():
     char_dict[(0,6)] = Keycodes.P
     char_dict[(0,7)] = Keycodes.ESC
 
-    char_dict[(1,0)] = Keycodes.NULL # RIGHT CLICK
+    char_dict[R_CLICK_IDX] = Keycodes.NULL # RIGHT CLICK
     char_dict[(1,1)] = Keycodes.Z
     char_dict[(1,2)] = Keycodes.O
     char_dict[(1,3)] = Keycodes.R
@@ -132,7 +149,7 @@ def create_chardict():
     char_dict[(1,6)] = Keycodes.Y # 9
     char_dict[(1,7)] = Keycodes.BKSPC
 
-    char_dict[(2,0)] = Keycodes.NULL # LEFT CLICK
+    char_dict[L_CLICK_IDX] = Keycodes.NULL # LEFT CLICK
     char_dict[(2,1)] = Keycodes.A
     char_dict[(2,2)] = Keycodes.E
     char_dict[(2,3)] = Keycodes.H
