@@ -17,22 +17,24 @@ def write_report(device, report):
         print("Failed to open ", filepath)
 
 
-def left_click(pressed_button):
+def left_click():
     print("left_click")
     # write_report(0, chr(32) + NULL_CHAR + NULL_CHAR)
 
-def right_click:
+def right_click():
     print("right_click")
     # write_report(0,))
+
 def main():
     mouse_buttons = [IN(20), IN(21)]
     mouse_buttons[LEFT_CLICK].when_activated=left_click
     mouse_buttons[RIGHT_CLICK].when_activated=right_click
 
-    print("Starting loop")
+    #print("Starting loop")
     while(True):
-        print(mouse_buttons[LEFT_CLICK].value)
+        #print(mouse_buttons[LEFT_CLICK].value)
         time.sleep(1)
+	left_click()
 
 if __name__ == "__main__":
         main()
