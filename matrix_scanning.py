@@ -49,7 +49,7 @@ def send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPre
         else:
             if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
                 if shiftPressed and pair in alt_char_dict.keys(): # shift is pressed
-                    keyboard_report += alt_char_dict[pair]
+                    keyboard_report += chr(alt_char_dict[pair])
                 else:
                     keyboard_report += chr(curr_char)
 
