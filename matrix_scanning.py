@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from ssl import ALERT_DESCRIPTION_PROTOCOL_VERSION
 from gpiozero import DigitalInputDevice as IN
 from gpiozero import DigitalOutputDevice as OUT
 import time
@@ -71,6 +72,16 @@ def release_key():
 def release_mouse():
     write_report(MOUSE_DEVICE_NUM, NULL_CHAR*MOUSE_REPORT_LEN)
 
+def get_modifer_byte(shiftPressed, ctrlPressed, altPressed):
+    modifier_byte = 0x0
+    if (shiftPressed):
+        modifier_byte |= 0x2
+    if (ctrlPressed):
+        modifier_byte |= 0x1
+    if (altPressed):
+        modifier_byte |= 0x4
+    return chr(modifier_byte)
+
 """
 Matrix Scanning: set cols to low and see if each row if low
 if row low, key in (row,col) is pressed
@@ -86,14 +97,20 @@ def scan_matrix(rows, cols):
         #time.sleep(0.001)
         seen = set()
         shiftPressed = False
+        ctrlPressed = False
+        altPressed = False
         for i, col in enumerate(cols):
             col.off()
             for j, row in enumerate(rows):
                 if (row.value):
                     if (j,i) == SHIFT_KEY_IDX:
                         shiftPressed = True
-                    else:
-                        seen.add((j,i))
+                    elif (j,i) == CTRL_IDX:
+                        ctrlPressed = True
+                    elif (j,i) == ALT_IDX:
+                        altPressed = True
+                    seen.add((j,i))
+
                 elif (j,i) in prevSeen:
                     prevSeen.remove((j,i))
                     if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
@@ -108,7 +125,7 @@ def scan_matrix(rows, cols):
             modifier_byte = chr(0x2)
         else:
             modifier_byte = chr(0)
-   
+        modifier_byte = get_modifer_byte(shiftPressed, ctrlPressed, altPressed)
         if len(seen) > 0:
             send_report(seen, prevSeen, modifier_byte)
 
@@ -149,7 +166,7 @@ def create_chardict():
     char_dict[(3,4)] = Keycodes.C # 1
     char_dict[(3,5)] = Keycodes.K # 2
     char_dict[(3,6)] = Keycodes.G # 3
-    char_dict[SHIFT_KEY_IDX] = Keycodes.NULL # SHIFT
+    char_dict[SHIFT_KEY_IDX] = Keycodes.L_SHIFT # SHIFT
 
     char_dict[(4,0)] = Keycodes.PERIOD
     char_dict[(4,1)] = Keycodes.NULL # ! and ? are shift+1 and shift+/
@@ -165,8 +182,8 @@ def create_chardict():
     char_dict[(5,2)] = Keycodes.K   # does not exist
     char_dict[(5,3)] = Keycodes.L   # does not exist
     char_dict[(5,4)] = Keycodes.M   # does not exist
-    char_dict[ALT_IDX] = Keycodes.NULL   # alt
-    char_dict[CTRL_IDX] = Keycodes.NULL   # CTRL
+    char_dict[ALT_IDX] = Keycodes.L_ALT   # alt
+    char_dict[CTRL_IDX] = Keycodes.L_CTRL   # CTRL
     char_dict[TOGGLE_IDX] = Keycodes.NULL # TOGGLE KEY
 
     return char_dict
