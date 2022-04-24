@@ -51,7 +51,7 @@ def send_report(seen, prevSeen):
                 keyboard_report += chr(curr_char)
 
     while len(keyboard_report) < KEYBOARD_REPORT_LEN:
-        curr_report += NULL_CHAR
+        keyboard_report += NULL_CHAR
 
     write_report(KEYBOARD_DEVICE_NUM, keyboard_report)
 
@@ -101,10 +101,10 @@ def scan_matrix(rows, cols, mouse_buttons):
                 #     else:
                 #         mouse_buttons[1].off()
                 if (row.value):
-                    prevSeen.add((j,i))
+                    seen.add((j,i))
                 elif (j,i) in prevSeen:
                     prevSeen.remove((j,i))
-                    if (j,i) == R_CLICK_IDX:
+                    if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
                         release_mouse()
                     else:
                         release_key()
