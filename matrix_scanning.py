@@ -137,11 +137,16 @@ def scan_matrix(rows, cols):
 
                         if (j,i) == NUM_LOCK_IDX:
                             NUM_LOCK = not NUM_LOCK # toggle  on key release
+                            print("NUM_LOCK", NUM_LOCK)
                         elif (j,i) == TOGGLE_IDX:
+                            if (HOLD_TOGGLE):
+                                SHIFT_TOGGLE = False
                             HOLD_TOGGLE = not HOLD_TOGGLE # toggle  on key release
-                            SHIFT_TOGGLE = False
+                            print("Hold toggle: ", SHIFT_TOGGLE)
+                            print("Shift toggle: ", SHIFT_TOGGLE)
                         elif (j,i) == SHIFT_KEY_IDX and HOLD_TOGGLE:
                             SHIFT_TOGGLE = not SHIFT_TOGGLE
+                            print("Shift toggle: ", SHIFT_TOGGLE)
                         
                         release_key()
 
