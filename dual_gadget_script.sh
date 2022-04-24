@@ -55,7 +55,7 @@ echo -ne \\x05\\x01\\x09\\x02\\xa1\\x01\\x09\\x01\\xa1\\x00\\x05\\x09\\x19\\x01\
 ###############################################################################
 
 # Create configuration
-CONFIGS_DIR = $GADGET_PATH/configs/c.1
+CONFIGS_DIR=$GADGET_PATH/configs/c.1
 mkdir $CONFIGS_DIR
 mkdir $CONFIGS_DIR/strings/0x409
 
