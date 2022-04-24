@@ -56,7 +56,7 @@ echo "05010906a101050719e029e715002501750195088102750895018101750195030508190129
 # Create configuration
 CONFIGS_DIR=$GADGET_PATH/configs/c.1
 mkdir $GADGET_PATH/configs/c.1
-mkdir $$GADGET_PATH/configs/c.1/strings/0x409
+mkdir $GADGET_PATH/configs/c.1/strings/0x409
 
 echo 0x80 > $GADGET_PATH/configs/c.1/bmAttributes
 echo 200 > $GADGET_PATH/configs/c.1/MaxPower # 200 mA
