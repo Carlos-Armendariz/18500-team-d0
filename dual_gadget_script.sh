@@ -1,7 +1,7 @@
 #!/bin/bash
 # SOURCE: https://forums.raspberrypi.com/viewtopic.php?t=234495
 
-GADGET_PATH=/sys/kernel/config/usb_gadget/apio
+GADGET_PATH=/sys/kernel/config/usb_gadget/my_keyboard
 
 mkdir $GADGET_PATH
 
@@ -16,8 +16,8 @@ echo 0x0104 > $GADGET_PATH/idProduct # Multifunction Composite Gadget
 echo 0x1d6b > $GADGET_PATH/idVendor # Linux Foundation
 
 # Create English locale
-STRINGS_DIR=$GADGET_PATH/strings/0x409
-mkdir $STRINGS_DIR
+# STRINGS_DIR=$GADGET_PATH/strings/0x409
+mkdir $GADGET_PATH/strings/0x409
 
 echo "18500_TEAM_D0" > $STRINGS_DIR/manufacturer
 echo "Accessibility Keyboard & Mouse" > $STRINGS_DIR/product
@@ -28,15 +28,14 @@ echo "0123456789" > $STRINGS_DIR/serialnumber
 ###############################################################################
 
 # Create HID function
-KEYBOARD_FUNCTIONS_DIR=$GADGET_PATH/functions/hid.usb0
-mkdir $KEYBOARD_FUNCTIONS_DIR
+mkdir $GADGET_PATH/functions/hid.usb0
 
-echo 1 > $KEYBOARD_FUNCTIONS_DIR/protocol
-echo 8 > $KEYBOARD_FUNCTIONS_DIR/report_length # 8-byte reports
-echo 1 > $KEYBOARD_FUNCTIONS_DIR/subclass
+echo 1 > $GADGET_PATH/functions/hid.usb0/protocol
+echo 8 > $GADGET_PATH/functions/hid.usb0/report_length # 8-byte reports
+echo 1 > $GADGET_PATH/functions/hid.usb0/subclass
 
 # Write report descriptor
-echo "05010906a101050719e029e71500250175019508810275089501810175019503050819012903910275019505910175089506150026ff00050719002aff008100c0" | xxd -r -ps > $KEYBOARD_FUNCTIONS_DIR/report_desc
+echo "05010906a101050719e029e71500250175019508810275089501810175019503050819012903910275019505910175089506150026ff00050719002aff008100c0" | xxd -r -ps > $GADGET_PATH/functions/hid.usb0/report_desc
 
 ###############################################################################
 # MOUSE
@@ -56,15 +55,15 @@ echo "05010906a101050719e029e715002501750195088102750895018101750195030508190129
 
 # Create configuration
 CONFIGS_DIR=$GADGET_PATH/configs/c.1
-mkdir $CONFIGS_DIR
-mkdir $CONFIGS_DIR/strings/0x409
+mkdir $GADGET_PATH/configs/c.1
+mkdir $$GADGET_PATH/configs/c.1/strings/0x409
 
-echo 0x80 > $CONFIGS_DIR/bmAttributes
-echo 200 > $CONFIGS_DIR/MaxPower # 200 mA
-echo "Keyboard configuration" > $CONFIGS_DIR/strings/0x409/configuration
+echo 0x80 > $GADGET_PATH/configs/c.1/bmAttributes
+echo 200 > $GADGET_PATH/configs/c.1/MaxPower # 200 mA
+echo "Keyboard configuration" > $GADGET_PATH/configs/c.1/strings/0x409/configuration
 
 # Link HID functions to configuration
 #ln -s $MOUSE_FUNCTIONS_DIR $CONFIGS_DIR
-ln -s $KEYBOARD_FUNCTIONS_DIR $CONFIGS_DIR
+ln -s $GADGET_PATH/functions/hid.usb0 $GADGET_PATH/configs/c.1
 
 ls /sys/class/udc > $GADGET_PATH/UDC
