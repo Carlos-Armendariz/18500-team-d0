@@ -54,6 +54,7 @@ class Keycodes:
     R_BRACK = 0X30
     SEMICOLON = 0X33
     COMMA = 0x36
+    BACK_SLASH =0x38
 
     L_SHIFT = 0xE1
     L_CTRL = 0xE0

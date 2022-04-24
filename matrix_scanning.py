@@ -183,9 +183,9 @@ def create_chardict():
 
     char_dict[(4,0)] = Keycodes.R_BRACK
     char_dict[(4,1)] = Keycodes.SEMICOLON
-    # char_dict[(4,2)] = Keycodes.L_BRACK
-    # char_dict[(4,3)] = Keycodes.R_BRACK
-    # char_dict[(4,4)] = Keycodes.SEMICOLON
+    char_dict[(4,2)] = Keycodes.APOSTROPHE
+    char_dict[(4,3)] = Keycodes.COMMA
+    char_dict[(4,4)] = Keycodes.PERIOD
     char_dict[(4,5)] = Keycodes.W # 0
     char_dict[(4,6)] = Keycodes.V
     char_dict[NUM_LOCK_IDX] = Keycodes.NULL # NUM LOCK
@@ -204,7 +204,9 @@ def create_chardict():
 def create_alt_chardict():
     alt_char_dict = dict()
 
-    alt_char_dict[(4,0)] = Keycodes.COMMA # PERIOD
+    alt_char_dict[(4,3)] = Keycodes.BACK_SLASH #COMMA
+    alt_char_dict[(4,4)] = Keycodes.ONE # Period
+
     alt_char_dict[(5,0)] = Keycodes.NINE # Left square bracket
     alt_char_dict[(4,0)] = Keycodes.ZERO # right square bracket
 
