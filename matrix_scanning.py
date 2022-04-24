@@ -31,7 +31,7 @@ def write_report(device, report):
 def send_report(seen, prevSeen, shiftPressed):
     char_dict = create_chardict()
     if (shiftPressed):
-        eyboard_report = chr(32) + NULL_CHAR
+        keyboard_report = chr(32) + NULL_CHAR
     else:
         keyboard_report = chr(0) + NULL_CHAR
 
