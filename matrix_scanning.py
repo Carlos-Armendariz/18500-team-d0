@@ -32,8 +32,9 @@ def write_report(device, report):
     except:
         print("Failed to open ", filepath)
 
-def send_report(char_dict, alt_char_dict, seen, prevSeen, modifier_byte):
+def send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPressed, ctrlPressed, altPressed):
 
+    modifier_byte = get_modifer_byte(shiftPressed, ctrlPressed, altPressed)
     keyboard_report = modifier_byte + NULL_CHAR
 
     l_click_pressed = False
@@ -47,7 +48,7 @@ def send_report(char_dict, alt_char_dict, seen, prevSeen, modifier_byte):
             r_click_pressed = True
         else:
             if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
-                if int(modifier_byte) >= 2 and pair in alt_char_dict.keys(): # shift is pressed
+                if shiftPressed and pair in alt_char_dict.keys(): # shift is pressed
                     keyboard_report += alt_char_dict[pair]
                 else:
                     keyboard_report += chr(curr_char)
@@ -97,6 +98,7 @@ def scan_matrix(rows, cols):
     print("Running matrix scanning")
     char_dict = create_chardict()
     alt_char_dict = create_alt_chardict()
+    alt_num_dict = create_alt_numdict()
     prevSeen = set()
     while True:
         #time.sleep(0.001)
@@ -126,13 +128,9 @@ def scan_matrix(rows, cols):
             col.on()
             time.sleep(0.001)
 
-        if (shiftPressed):
-            modifier_byte = chr(0x2)
-        else:
-            modifier_byte = chr(0)
-        modifier_byte = get_modifer_byte(shiftPressed, ctrlPressed, altPressed)
+        # modifier_byte = get_modifer_byte(shiftPressed, ctrlPressed, altPressed)
         if len(seen) > 0:
-            send_report(char_dict, alt_char_dict, seen, prevSeen, modifier_byte)
+            send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPressed, ctrlPressed, altPressed)
 
 
 def create_chardict():
@@ -194,26 +192,31 @@ def create_chardict():
     return char_dict
 
 def create_alt_chardict():
-
     alt_char_dict = dict()
 
-    alt_char_dict[(1,4)] = Keycodes.SEVEN # S
-    alt_char_dict[(1,5)] = Keycodes.EIGHT # U
-    alt_char_dict[(1,6)] = Keycodes.NINE # Y
-
-    alt_char_dict[(2,4)] = Keycodes.FOUR #T
-    alt_char_dict[(2,5)] = Keycodes.FIVE #D
-    alt_char_dict[(2,6)] = Keycodes.SIX #B
-
-    alt_char_dict[(3,4)] = Keycodes.ONE # C
-    alt_char_dict[(3,5)] = Keycodes.TWO # K
-    alt_char_dict[(3,6)] = Keycodes.THREE # G
-
     alt_char_dict[(4,0)] = Keycodes.APOSTROPHE # PERIOD
-
     alt_char_dict[(4,2)] = Keycodes.NINE # Left square bracket
     alt_char_dict[(4,3)] = Keycodes.ZERO # right square bracket
+
     return alt_char_dict
+
+def create_alt_numdict():
+    alt_num_dict = dict()
+
+    alt_num_dict[(1,4)] = Keycodes.SEVEN # S
+    alt_num_dict[(1,5)] = Keycodes.EIGHT # U
+    alt_num_dict[(1,6)] = Keycodes.NINE # Y
+
+    alt_num_dict[(2,4)] = Keycodes.FOUR #T
+    alt_num_dict[(2,5)] = Keycodes.FIVE #D
+    alt_num_dict[(2,6)] = Keycodes.SIX #B
+
+    alt_num_dict[(3,4)] = Keycodes.ONE # C
+    alt_num_dict[(3,5)] = Keycodes.TWO # K
+    alt_num_dict[(3,6)] = Keycodes.THREE # G
+
+    return alt_num_dict
+
 
 
 def main():
