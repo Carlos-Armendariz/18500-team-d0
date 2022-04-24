@@ -225,6 +225,8 @@ def create_alt_numdict():
     alt_num_dict[(3,5)] = Keycodes.TWO # K
     alt_num_dict[(3,6)] = Keycodes.THREE # G
 
+    alt_num_dict[(4,5)] = Keycodes.ZERO # W
+
     return alt_num_dict
 
 
