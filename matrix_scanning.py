@@ -21,21 +21,15 @@ R_CLICK_IDX = (1,0)
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
-    # print("Writing report")
     try:
         with open(filepath, 'rb+') as fd:
             fd.write(report.encode())
     except:
         print("Failed to open ", filepath)
 
-# clear UDC to unbind
-# need to save name of UDC so that new device can have it written to UDC file
 def send_report(seen, prevSeen):
-
     char_dict = create_chardict()
-
-    
-    keyboard_report = chr(0) + NULL_CHAR
+    keyboard_report = chr(32) + NULL_CHAR
 
     l_click_pressed = False
     r_click_pressed = False
@@ -77,7 +71,7 @@ def release_mouse():
 Matrix Scanning: set cols to low and see if each row if low
 if row low, key in (row,col) is pressed
 """
-def scan_matrix(rows, cols, mouse_buttons):
+def scan_matrix(rows, cols):
  
     for col in cols:
         col.on()
@@ -90,16 +84,6 @@ def scan_matrix(rows, cols, mouse_buttons):
         for i, col in enumerate(cols):
             col.off()
             for j, row in enumerate(rows):
-                # if (j,i) == (1,0): # right click
-                #     if row.value:
-                #         mouse_buttons[0].on()
-                #     else:
-                #         mouse_buttons[0].off()
-                # elif (j,i) == (2,0): # left click
-                #     if row.value:
-                #         mouse_buttons[1].on()
-                #     else:
-                #         mouse_buttons[1].off()
                 if (row.value):
                     seen.add((j,i))
                 elif (j,i) in prevSeen:
@@ -114,19 +98,6 @@ def scan_matrix(rows, cols, mouse_buttons):
    
         if len(seen) > 0:
             send_report(seen, prevSeen)
-
-
-def main():
-
-    rows = [IN(2, pull_up=True), IN(3, pull_up=True), IN(4, pull_up=True), 
-            IN(17, pull_up=True),  IN(27, pull_up=True),  IN(22, pull_up=True)]
-    
-    cols = [OUT(9), OUT(11), OUT(0), OUT(5),
-            OUT(6), OUT(13), OUT(19), OUT(26)]
-    
-    mouse_buttons = [OUT(20), OUT(21)]
-
-    scan_matrix(rows, cols, mouse_buttons)
 
 
 def create_chardict():
@@ -182,11 +153,22 @@ def create_chardict():
     char_dict[(5,3)] = Keycodes.L   # does not exist
     char_dict[(5,4)] = Keycodes.M   # does not exist
     char_dict[(5,5)] = Keycodes.N   # alt
-    char_dict[(5,6)] = Keycodes.O   # CTRL
+    char_dict[(5,6)] = Keycodes.ONE   # CTRL
     char_dict[(5,7)] = Keycodes.P # TOGGLE KEY
 
     return char_dict
 
+
+
+def main():
+
+    rows = [IN(2, pull_up=True), IN(3, pull_up=True), IN(4, pull_up=True), 
+            IN(17, pull_up=True),  IN(27, pull_up=True),  IN(22, pull_up=True)]
+    
+    cols = [OUT(9), OUT(11), OUT(0), OUT(5),
+            OUT(6), OUT(13), OUT(19), OUT(26)]
+
+    scan_matrix(rows, cols)
 
 if __name__ == "__main__":
     main()
