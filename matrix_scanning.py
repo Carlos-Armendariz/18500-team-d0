@@ -5,7 +5,6 @@ from gpiozero import DigitalInputDevice as IN
 from gpiozero import DigitalOutputDevice as OUT
 import time
 from keycodes import Keycodes
-from mouse_receiver import RIGHT_CLICK
 
 NULL_CHAR = chr(0)
 
