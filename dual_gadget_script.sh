@@ -1,46 +1,69 @@
 #!/bin/bash
-# mouse
 # SOURCE: https://forums.raspberrypi.com/viewtopic.php?t=234495
 
+GADGET_PATH=/sys/kernel/config/usb_gadget/apio
 
+mkdir $GADGET_PATH
 
+# Add basic information
+echo 0x0100 > $GADGET_PATH/bcdDevice # Version 1.0.0
+echo 0x0200 > $GADGET_PATH/bcdUSB # USB 2.0
+echo 0x00 > $GADGET_PATH/bDeviceClass
+echo 0x00 > $GADGET_PATH/bDeviceProtocol
+echo 0x00 > $GADGET_PATH/bDeviceSubClass
+echo 0x08 > $GADGET_PATH/bMaxPacketSize0
+echo 0x0104 > $GADGET_PATH/idProduct # Multifunction Composite Gadget
+echo 0x1d6b > $GADGET_PATH/idVendor # Linux Foundation
 
-# Create gadget
-MOUSE_PATH=/sys/kernel/config/usb_gadget/mymouse
+# Create English locale
+STRINGS_DIR=$GADGET_PATH/strings/0x409
+mkdir $STRINGS_DIR
 
-mkdir $MOUSE_PATH 
-#cd /sys/kernel/config/usb_gadget/mymouse
+echo "18500_TEAM_D0" > $STRINGS_DIR/manufacturer
+echo "Accessibility Keyboard & Mouse" > $STRINGS_DIR/product
+echo "0123456789" > $STRINGS_DIR/serialnumber
 
-echo 0x0100 > $MOUSE_PATH/bcdDevice # v1.0.0
-echo 0x0200 > $MOUSE_PATH/bcdUSB # USB2
-echo 0x00 > $MOUSE_PATH/bDeviceClass
-echo 0x00 > $MOUSE_PATH/bDeviceProtocol
-echo 0x00 > $MOUSE_PATH/bDeviceSubClass
-echo 0x08 > $MOUSE_PATH/bMaxPacketSize0
-echo 0x0104 > $MOUSE_PATH/idProduct # Multifunction Composite Gadget
-echo 0x1d6b > $MOUSE_PATH/idVendor # Linux Foundation
+###############################################################################
+# KEYBOARD
+###############################################################################
 
+# Create HID function
+KEYBOARD_FUNCTIONS_DIR=$GADGET_PATH/functions/hid.usb0
+mkdir $FUNCTIONS_DIR
 
-mkdir $MOUSE_PATH/strings/0x409
+echo 1 > $KEYBOARD_FUNCTIONS_DIR/protocol
+echo 8 > $KEYBOARD_FUNCTIONS_DIR/report_length # 8-byte reports
+echo 1 > $KEYBOARD_FUNCTIONS_DIR/subclass
 
-echo "18500_TEAM_D0" > $MOUSE_PATH/strings/0x409/manufacturer
-echo "Accessibility Mouse" > $MOUSE_PATH/strings/0x409/product
-echo "fedcba9876543210" > $MOUSE_PATH/strings/0x409/serialnumber
+# Write report descriptor
+echo "05010906a101050719e029e71500250175019508810275089501810175019503050819012903910275019505910175089506150026ff00050719002aff008100c0" | xxd -r -ps > $KEYBOARD_PATH/functions/hid.usb0/report_desc
 
+###############################################################################
+# MOUSE
+###############################################################################
 # Add functions here
-mkdir $MOUSE_PATH/functions/hid.usb0
+MOUSE_FUNCTIONS_DIR = $GADGET_PATH/functions/hid.usb1
+mkdir $MOUSE_FUNCTIONS_DIR
 
-echo 1 > $MOUSE_PATH/functions/hid.usb0/protocol
-echo 3 > $MOUSE_PATH/functions/hid.usb0/report_length
-echo 1 > $MOUSE_PATH/functions/hid.usb0/subclass
+echo 1 > $MOUSE_PATH/functions/hid.usb1/protocol
+echo 3 > $MOUSE_PATH/functions/hid.usb1/report_length
+echo 1 > $MOUSE_PATH/functions/hid.usb1/subclass
 
 # Write report descriptor
 echo -ne \\x05\\x01\\x09\\x02\\xa1\\x01\\x09\\x01\\xa1\\x00\\x05\\x09\\x19\\x01\\x29\\x03\\x15\\x00\\x25\\x01\\x95\\x03\\x75\\x01\\x81\\x02\\x95\\x01\\x75\\x05\\x81\\x03\\x05\\x01\\x09\\x30\\x09\\x31\\x15\\x81\\x25\\x7f\\x75\\x08\\x95\\x02\\x81\\x06\\xc0\\xc0 > $MOUSE_PATH/functions/hid.usb0/report_desc
 
-# Create configuration
-mkdir $MOUSE_PATH/configs/c.1
-mkdir $MOUSE_PATH/configs/c.1/strings/0x409
-echo "Mouse Configuration" > $MOUSE_PATH/configs/c.1/strings/0x409/configuration
-echo 200 > $MOUSE_PATH/configs/c.1/MaxPower
+###############################################################################
 
-ln -s $MOUSE_PATH/functions/hid.usb0 $MOUSE_PATH/configs/c.1/
+# Create configuration
+CONFIGS_DIR = $GADGET_PATH/configs/c.1
+mkdir $CONFIGS_DIR
+mkdir $CONFIGS_DIR/strings/0x409
+
+echo 0x80 > $CONFIGS_DIR/bmAttributes
+echo 200 > $CONFIGS_DIR/MaxPower # 200 mA
+echo "Keyboard configuration" > $CONFIGS_DIR/strings/0x409/configuration
+
+ls /sys/class/udc > $GADGET_PATH/UDC
+# Link HID functions to configuration
+ln -s $MOUSE_FUNCTIONS_DIR $CONFIGS_DIR
+ln -s $KEYBOARD_FUNCTIONS_DIR $CONFIGS_DIR
