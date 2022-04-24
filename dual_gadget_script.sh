@@ -29,14 +29,14 @@ echo "0123456789" > $STRINGS_DIR/serialnumber
 
 # Create HID function
 KEYBOARD_FUNCTIONS_DIR=$GADGET_PATH/functions/hid.usb0
-mkdir $FUNCTIONS_DIR
+mkdir $KEYBOARD_FUNCTIONS_DIR
 
 echo 1 > $KEYBOARD_FUNCTIONS_DIR/protocol
 echo 8 > $KEYBOARD_FUNCTIONS_DIR/report_length # 8-byte reports
 echo 1 > $KEYBOARD_FUNCTIONS_DIR/subclass
 
 # Write report descriptor
-echo "05010906a101050719e029e71500250175019508810275089501810175019503050819012903910275019505910175089506150026ff00050719002aff008100c0" | xxd -r -ps > $KEYBOARD_PATH/functions/hid.usb0/report_desc
+echo "05010906a101050719e029e71500250175019508810275089501810175019503050819012903910275019505910175089506150026ff00050719002aff008100c0" | xxd -r -ps > $KEYBOARD_FUNCTIONS_DIR/report_desc
 
 ###############################################################################
 # MOUSE
@@ -50,7 +50,7 @@ echo 3 > $MOUSE_PATH/functions/hid.usb1/report_length
 echo 1 > $MOUSE_PATH/functions/hid.usb1/subclass
 
 # Write report descriptor
-echo -ne \\x05\\x01\\x09\\x02\\xa1\\x01\\x09\\x01\\xa1\\x00\\x05\\x09\\x19\\x01\\x29\\x03\\x15\\x00\\x25\\x01\\x95\\x03\\x75\\x01\\x81\\x02\\x95\\x01\\x75\\x05\\x81\\x03\\x05\\x01\\x09\\x30\\x09\\x31\\x15\\x81\\x25\\x7f\\x75\\x08\\x95\\x02\\x81\\x06\\xc0\\xc0 > $MOUSE_PATH/functions/hid.usb0/report_desc
+echo -ne \\x05\\x01\\x09\\x02\\xa1\\x01\\x09\\x01\\xa1\\x00\\x05\\x09\\x19\\x01\\x29\\x03\\x15\\x00\\x25\\x01\\x95\\x03\\x75\\x01\\x81\\x02\\x95\\x01\\x75\\x05\\x81\\x03\\x05\\x01\\x09\\x30\\x09\\x31\\x15\\x81\\x25\\x7f\\x75\\x08\\x95\\x02\\x81\\x06\\xc0\\xc0 > $MOUSE_FUNCTIONS_DIR/report_desc
 
 ###############################################################################
 
