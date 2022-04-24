@@ -41,15 +41,14 @@ echo "05010906a101050719e029e715002501750195088102750895018101750195030508190129
 # MOUSE
 ###############################################################################
 # Add functions here
-#MOUSE_FUNCTIONS_DIR=$GADGET_PATH/functions/hid.usb1
-#mkdir $MOUSE_FUNCTIONS_DIR
+mkdir $GADGET_PATH/functions/hid.usb1
 
-#echo 1 > $MOUSE_FUNCTIONS_DIR/protocol
-#echo 3 > $MOUSE_FUNCTIONS_DIR/report_length
-#echo 1 > $MOUSE_FUNCTIONS_DIR/subclass
+echo 1 > $GADGET_PATH/functions/hid.usb1/protocol
+echo 3 > $GADGET_PATH/functions/hid.usb1/report_length
+echo 1 > $GADGET_PATH/functions/hid.usb1/subclass
 
 # Write report descriptor
-#echo -ne \\x05\\x01\\x09\\x02\\xa1\\x01\\x09\\x01\\xa1\\x00\\x05\\x09\\x19\\x01\\x29\\x03\\x15\\x00\\x25\\x01\\x95\\x03\\x75\\x01\\x81\\x02\\x95\\x01\\x75\\x05\\x81\\x03\\x05\\x01\\x09\\x30\\x09\\x31\\x15\\x81\\x25\\x7f\\x75\\x08\\x95\\x02\\x81\\x06\\xc0\\xc0 > $MOUSE_FUNCTIONS_DIR/report_desc
+echo -ne \\x05\\x01\\x09\\x02\\xa1\\x01\\x09\\x01\\xa1\\x00\\x05\\x09\\x19\\x01\\x29\\x03\\x15\\x00\\x25\\x01\\x95\\x03\\x75\\x01\\x81\\x02\\x95\\x01\\x75\\x05\\x81\\x03\\x05\\x01\\x09\\x30\\x09\\x31\\x15\\x81\\x25\\x7f\\x75\\x08\\x95\\x02\\x81\\x06\\xc0\\xc0 > $GADGET_PATH/functions/hid.usb1/report_desc
 
 ###############################################################################
 
@@ -65,5 +64,6 @@ echo "Keyboard configuration" > $GADGET_PATH/configs/c.1/strings/0x409/configura
 # Link HID functions to configuration
 #ln -s $MOUSE_FUNCTIONS_DIR $CONFIGS_DIR
 ln -s $GADGET_PATH/functions/hid.usb0 $GADGET_PATH/configs/c.1
+ln -s $GADGET_PATH/functions/hid.usb1 $GADGET_PATH/configs/c.1
 
 ls /sys/class/udc > $GADGET_PATH/UDC
