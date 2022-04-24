@@ -53,3 +53,7 @@ class Keycodes:
     L_BRACK = 0X24
     R_BRACK = 0X20
     SEMICOLON = 0X33
+
+    L_SHIFT = 0xE1
+    L_CTRL = 0xE0
+    L_ALT = 0xE2

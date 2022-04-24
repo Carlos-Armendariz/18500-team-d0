@@ -19,6 +19,7 @@ CURR_DEVICE = KEYBOARD_DEVICE_NUM
 L_CLICK_IDX = (2,0)
 R_CLICK_IDX = (1,0)
 SHIFT_KEY_IDX = (3,7)
+NUM_LOCK_IDX = (4,7)
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
@@ -31,7 +32,7 @@ def write_report(device, report):
 def send_report(seen, prevSeen, shiftPressed):
     char_dict = create_chardict()
     if (shiftPressed):
-        keyboard_report = chr(32) + NULL_CHAR
+        keyboard_report = chr(0x1) + NULL_CHAR
     else:
         keyboard_report = chr(0) + NULL_CHAR
 
@@ -144,7 +145,7 @@ def create_chardict():
     char_dict[(3,4)] = Keycodes.C # 1
     char_dict[(3,5)] = Keycodes.K # 2
     char_dict[(3,6)] = Keycodes.G # 3
-    char_dict[(3,7)] = Keycodes.NULL # SHIFT
+    char_dict[SHIFT_KEY_IDX] = Keycodes.L_SHIFT # SHIFT
 
     char_dict[(4,0)] = Keycodes.PERIOD
     char_dict[(4,1)] = Keycodes.NULL # ! and ? are shift+1 and shift+/
@@ -153,7 +154,7 @@ def create_chardict():
     char_dict[(4,4)] = Keycodes.SEMICOLON # SEMICOLON
     char_dict[(4,5)] = Keycodes.W # 0
     char_dict[(4,6)] = Keycodes.V
-    char_dict[(4,7)] = Keycodes.NULL # NUM LOCK
+    char_dict[NUM_LOCK_IDX] = Keycodes.NULL # NUM LOCK
 
     char_dict[(5,0)] = Keycodes.APOSTROPHE   # APOSTROPHE/QUOTES
     char_dict[(5,1)] = Keycodes.J   # does not exist
@@ -161,8 +162,8 @@ def create_chardict():
     char_dict[(5,3)] = Keycodes.L   # does not exist
     char_dict[(5,4)] = Keycodes.M   # does not exist
     char_dict[(5,5)] = Keycodes.N   # alt
-    char_dict[(5,6)] = Keycodes.ONE   # CTRL
-    char_dict[(5,7)] = Keycodes.P # TOGGLE KEY
+    char_dict[(5,6)] = Keycodes.L_CTRL   # CTRL
+    char_dict[(5,7)] = Keycodes.NULL # TOGGLE KEY
 
     return char_dict
 
