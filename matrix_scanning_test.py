@@ -56,11 +56,11 @@ def send_report(seen, prevSeen):
     write_report(KEYBOARD_DEVICE_NUM, keyboard_report)
 
     if (l_click_pressed and r_click_pressed):
-        mouse_report = chr(32) + (NULL_CHAR*2)
+        mouse_report = chr(0x3) + (NULL_CHAR*2)
     elif (l_click_pressed):
-        mouse_report = chr(32) + (NULL_CHAR*2)
+        mouse_report = chr(0x1) + (NULL_CHAR*2)
     elif (r_click_pressed):
-        mouse_report = chr(32) + (NULL_CHAR*2)
+        mouse_report = chr(0x2) + (NULL_CHAR*2)
     else:
         mouse_report = NULL_CHAR * MOUSE_REPORT_LEN
 
