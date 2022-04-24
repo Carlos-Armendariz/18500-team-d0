@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from turtle import begin_fill
 from gpiozero import DigitalInputDevice as IN
 from gpiozero import DigitalOutputDevice as OUT
 import time
@@ -18,6 +19,7 @@ CURR_DEVICE = KEYBOARD_DEVICE_NUM
 
 L_CLICK_IDX = (2,0)
 R_CLICK_IDX = (1,0)
+SHIFT_KEY_IDX = (3,7)
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
@@ -27,9 +29,12 @@ def write_report(device, report):
     except:
         print("Failed to open ", filepath)
 
-def send_report(seen, prevSeen):
+def send_report(seen, prevSeen, shiftPressed):
     char_dict = create_chardict()
-    keyboard_report = chr(32) + NULL_CHAR
+    if (shiftPressed):
+        eyboard_report = chr(32) + NULL_CHAR
+    else:
+        keyboard_report = chr(0) + NULL_CHAR
 
     l_click_pressed = False
     r_click_pressed = False
@@ -81,11 +86,15 @@ def scan_matrix(rows, cols):
     while True:
         #time.sleep(0.001)
         seen = set()
+        shiftPressed = False
         for i, col in enumerate(cols):
             col.off()
             for j, row in enumerate(rows):
                 if (row.value):
-                    seen.add((j,i))
+                    if (j,i) == SHIFT_KEY_IDX:
+                        shiftPressed = True
+                    else:
+                        seen.add((j,i))
                 elif (j,i) in prevSeen:
                     prevSeen.remove((j,i))
                     if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
@@ -97,7 +106,7 @@ def scan_matrix(rows, cols):
             time.sleep(0.001)
    
         if len(seen) > 0:
-            send_report(seen, prevSeen)
+            send_report(seen, prevSeen, shiftPressed)
 
 
 def create_chardict():
