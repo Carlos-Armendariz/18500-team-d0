@@ -33,7 +33,7 @@ def write_report(device, report):
 
 def send_report(seen, prevSeen, modifier_byte):
     char_dict = create_chardict()
-    keyboard_report = chr(modifier_byte) + NULL_CHAR
+    keyboard_report = modifier_byte + NULL_CHAR
 
     l_click_pressed = False
     r_click_pressed = False
