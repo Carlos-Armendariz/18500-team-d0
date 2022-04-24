@@ -145,7 +145,7 @@ def create_chardict():
     char_dict[(3,4)] = Keycodes.C # 1
     char_dict[(3,5)] = Keycodes.K # 2
     char_dict[(3,6)] = Keycodes.G # 3
-    char_dict[SHIFT_KEY_IDX] = Keycodes.L_SHIFT # SHIFT
+    char_dict[SHIFT_KEY_IDX] = Keycodes.NULL # SHIFT
 
     char_dict[(4,0)] = Keycodes.PERIOD
     char_dict[(4,1)] = Keycodes.NULL # ! and ? are shift+1 and shift+/
@@ -161,8 +161,8 @@ def create_chardict():
     char_dict[(5,2)] = Keycodes.K   # does not exist
     char_dict[(5,3)] = Keycodes.L   # does not exist
     char_dict[(5,4)] = Keycodes.M   # does not exist
-    char_dict[(5,5)] = Keycodes.N   # alt
-    char_dict[(5,6)] = Keycodes.L_CTRL   # CTRL
+    char_dict[(5,5)] = Keycodes.NULL   # alt
+    char_dict[(5,6)] = Keycodes.NULL   # CTRL
     char_dict[(5,7)] = Keycodes.NULL # TOGGLE KEY
 
     return char_dict
