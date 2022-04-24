@@ -32,8 +32,8 @@ def write_report(device, report):
     except:
         print("Failed to open ", filepath)
 
-def send_report(seen, prevSeen, modifier_byte):
-    char_dict = create_chardict()
+def send_report(char_dict, alt_char_dict, seen, prevSeen, modifier_byte):
+
     keyboard_report = modifier_byte + NULL_CHAR
 
     l_click_pressed = False
@@ -47,7 +47,10 @@ def send_report(seen, prevSeen, modifier_byte):
             r_click_pressed = True
         else:
             if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
-                keyboard_report += chr(curr_char)
+                if int(modifier_byte) >= 2 and pair in alt_char_dict.keys(): # shift is pressed
+                    keyboard_report += alt_char_dict[pair]
+                else:
+                    keyboard_report += chr(curr_char)
 
     while len(keyboard_report) < KEYBOARD_REPORT_LEN:
         keyboard_report += NULL_CHAR
@@ -87,11 +90,13 @@ Matrix Scanning: set cols to low and see if each row if low
 if row low, key in (row,col) is pressed
 """
 def scan_matrix(rows, cols):
- 
+    
     for col in cols:
         col.on()
 
     print("Running matrix scanning")
+    char_dict = create_chardict()
+    alt_char_dict = create_alt_chardict()
     prevSeen = set()
     while True:
         #time.sleep(0.001)
@@ -127,7 +132,7 @@ def scan_matrix(rows, cols):
             modifier_byte = chr(0)
         modifier_byte = get_modifer_byte(shiftPressed, ctrlPressed, altPressed)
         if len(seen) > 0:
-            send_report(seen, prevSeen, modifier_byte)
+            send_report(char_dict, alt_char_dict, seen, prevSeen, modifier_byte)
 
 
 def create_chardict():
@@ -156,7 +161,7 @@ def create_chardict():
     char_dict[(2,3)] = Keycodes.H
     char_dict[(2,4)] = Keycodes.T #4
     char_dict[(2,5)] = Keycodes.D #5
-    char_dict[(2,6)] = Keycodes.B #5
+    char_dict[(2,6)] = Keycodes.B #6
     char_dict[(2,7)] = Keycodes.ENTER
 
     char_dict[(3,0)] = Keycodes.SPACE
@@ -172,7 +177,7 @@ def create_chardict():
     char_dict[(4,1)] = Keycodes.NULL # ! and ? are shift+1 and shift+/
     char_dict[(4,2)] = Keycodes.L_BRACK
     char_dict[(4,3)] = Keycodes.R_BRACK
-    char_dict[(4,4)] = Keycodes.SEMICOLON # SEMICOLON
+    char_dict[(4,4)] = Keycodes.SEMICOLON
     char_dict[(4,5)] = Keycodes.W # 0
     char_dict[(4,6)] = Keycodes.V
     char_dict[NUM_LOCK_IDX] = Keycodes.NULL # NUM LOCK
@@ -188,6 +193,27 @@ def create_chardict():
 
     return char_dict
 
+def create_alt_chardict():
+
+    alt_char_dict = dict()
+
+    alt_char_dict[(1,4)] = Keycodes.SEVEN # S
+    alt_char_dict[(1,5)] = Keycodes.EIGHT # U
+    alt_char_dict[(1,6)] = Keycodes.NINE # Y
+
+    alt_char_dict[(2,4)] = Keycodes.FOUR #T
+    alt_char_dict[(2,5)] = Keycodes.FIVE #D
+    alt_char_dict[(2,6)] = Keycodes.SIX #B
+
+    alt_char_dict[(3,4)] = Keycodes.ONE # C
+    alt_char_dict[(3,5)] = Keycodes.TWO # K
+    alt_char_dict[(3,6)] = Keycodes.THREE # G
+
+    alt_char_dict[(4,0)] = Keycodes.APOSTROPHE # PERIOD
+
+    alt_char_dict[(4,2)] = Keycodes.NINE # Left square bracket
+    alt_char_dict[(4,3)] = Keycodes.ZERO # right square bracket
+    return alt_char_dict
 
 
 def main():
