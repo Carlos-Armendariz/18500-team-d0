@@ -24,6 +24,10 @@ ALT_IDX = (5,5)
 CTRL_IDX = (5,6)
 TOGGLE_IDX = (5,7)
 
+
+#TOGGLE VALUES
+NUM_LOCK = False
+
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
     try:
@@ -50,6 +54,8 @@ def send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPre
             if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
                 if shiftPressed and pair in alt_char_dict.keys(): # shift is pressed
                     keyboard_report += chr(alt_char_dict[pair])
+                elif NUM_LOCK and pair in alt_num_dict.keys():
+                    keyboard_report += chr(alt_num_dict[pair])
                 else:
                     keyboard_report += chr(curr_char)
 
