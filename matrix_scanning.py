@@ -86,7 +86,7 @@ def release_mouse():
 
 def get_modifer_byte(shiftPressed, ctrlPressed, altPressed):
     modifier_byte = 0x0
-    if (shiftPressed):
+    if (shiftPressed or HOLD_TOGGLE and SHIFT_TOGGLE):
         modifier_byte |= 0x2
     if (ctrlPressed):
         modifier_byte |= 0x1
