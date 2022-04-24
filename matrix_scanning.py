@@ -181,16 +181,16 @@ def create_chardict():
     char_dict[(3,6)] = Keycodes.G # 3
     char_dict[SHIFT_KEY_IDX] = Keycodes.L_SHIFT # SHIFT
 
-    char_dict[(4,0)] = Keycodes.PERIOD
+    char_dict[(4,0)] = Keycodes.R_BRACK
     char_dict[(4,1)] = Keycodes.NULL # ! and ? are shift+1 and shift+/
-    char_dict[(4,2)] = Keycodes.L_BRACK
-    char_dict[(4,3)] = Keycodes.R_BRACK
+    # char_dict[(4,2)] = Keycodes.L_BRACK
+    # char_dict[(4,3)] = Keycodes.R_BRACK
     char_dict[(4,4)] = Keycodes.SEMICOLON
     char_dict[(4,5)] = Keycodes.W # 0
     char_dict[(4,6)] = Keycodes.V
     char_dict[NUM_LOCK_IDX] = Keycodes.NULL # NUM LOCK
 
-    char_dict[(5,0)] = Keycodes.APOSTROPHE   # APOSTROPHE/QUOTES
+    char_dict[(5,0)] = Keycodes.L_BRACK   # APOSTROPHE/QUOTES
     char_dict[(5,1)] = Keycodes.J   # does not exist
     char_dict[(5,2)] = Keycodes.K   # does not exist
     char_dict[(5,3)] = Keycodes.L   # does not exist
@@ -205,8 +205,8 @@ def create_alt_chardict():
     alt_char_dict = dict()
 
     alt_char_dict[(4,0)] = Keycodes.COMMA # PERIOD
-    alt_char_dict[(4,2)] = Keycodes.NINE # Left square bracket
-    alt_char_dict[(4,3)] = Keycodes.ZERO # right square bracket
+    alt_char_dict[(5,0)] = Keycodes.NINE # Left square bracket
+    alt_char_dict[(4,0)] = Keycodes.ZERO # right square bracket
 
     return alt_char_dict
 
