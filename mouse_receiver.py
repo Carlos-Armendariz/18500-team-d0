@@ -19,12 +19,16 @@ def write_report(device, report):
 
 def left_click():
     #p rint("left_click")
-    write_report(0, chr(32) + NULL_CHAR + NULL_CHAR)
+    # write_report(0, chr(32) + NULL_CHAR + NULL_CHAR)
+    write_report(0, chr(4) + NULL_CHAR + NULL_CHAR)
 
 def right_click():
     # print("right_click")
     # write_report(0,))
     pass
+
+def release_click():
+    write_report(0, NULL_CHAR*3)
 
 def main():
     mouse_buttons = [IN(20), IN(21)]
@@ -35,7 +39,9 @@ def main():
     while(True):
         #print(mouse_buttons[LEFT_CLICK].value)
         left_click()
-        time.sleep(5)
+        time.sleep(1)
+        release_click()
+        time.sleep(4)
 
 
 if __name__ == "__main__":
