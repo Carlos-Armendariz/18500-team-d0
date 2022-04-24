@@ -27,6 +27,8 @@ TOGGLE_IDX = (5,7)
 
 #TOGGLE VALUES
 NUM_LOCK = False
+HOLD_TOGGLE = False
+SHIFT_TOGGLE = False
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
@@ -52,7 +54,7 @@ def send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPre
             r_click_pressed = True
         else:
             if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
-                if shiftPressed and pair in alt_char_dict.keys(): # shift is pressed
+                if shiftPressed or (HOLD_TOGGLE and SHIFT_TOGGLE) and pair in alt_char_dict.keys(): # shift is pressed
                     keyboard_report += chr(alt_char_dict[pair])
                 elif NUM_LOCK and pair in alt_num_dict.keys():
                     keyboard_report += chr(alt_num_dict[pair])
@@ -129,9 +131,17 @@ def scan_matrix(rows, cols):
                     if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
                         release_mouse()
                     else:
+                        global HOLD_TOGGLE
+                        global SHIFT_TOGGLE
+                        global NUM_LOCK
+
                         if (j,i) == NUM_LOCK_IDX:
-                            global NUM_LOCK
-                            NUM_LOCK = not NUM_LOCK # toggle NUM_LOCK on key release
+                            NUM_LOCK = not NUM_LOCK # toggle  on key release
+                        elif (j,i) == TOGGLE_IDX:
+                            HOLD_TOGGLE = not HOLD_TOGGLE # toggle  on key release
+                            SHIFT_TOGGLE = False
+                        elif (j,i) == SHIFT_KEY_IDX and HOLD_TOGGLE:
+                            SHIFT_TOGGLE = not SHIFT_TOGGLE
                         
                         release_key()
 
