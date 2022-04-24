@@ -47,3 +47,9 @@ class Keycodes:
     BKSPC   = 0x2A
     TAB     = 0x2B
     SPACE   = 0x2C
+
+    APOSTROPHE = 0x34
+    PERIOD = 0X37
+    L_BRACK = 0X24
+    R_BRACK = 0X20
+    SEMICOLON = 0X33
