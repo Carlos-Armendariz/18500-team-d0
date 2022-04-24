@@ -63,7 +63,8 @@ echo 0x80 > $CONFIGS_DIR/bmAttributes
 echo 200 > $CONFIGS_DIR/MaxPower # 200 mA
 echo "Keyboard configuration" > $CONFIGS_DIR/strings/0x409/configuration
 
-ls /sys/class/udc > $GADGET_PATH/UDC
 # Link HID functions to configuration
 ln -s $MOUSE_FUNCTIONS_DIR $CONFIGS_DIR
 ln -s $KEYBOARD_FUNCTIONS_DIR $CONFIGS_DIR
+
+ls /sys/class/udc > $GADGET_PATH/UDC
