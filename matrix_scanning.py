@@ -200,7 +200,7 @@ def create_chardict():
 def create_alt_chardict():
     alt_char_dict = dict()
 
-    alt_char_dict[(4,0)] = Keycodes.APOSTROPHE # PERIOD
+    alt_char_dict[(4,0)] = Keycodes.COMMA # PERIOD
     alt_char_dict[(4,2)] = Keycodes.NINE # Left square bracket
     alt_char_dict[(4,3)] = Keycodes.ZERO # right square bracket
 
