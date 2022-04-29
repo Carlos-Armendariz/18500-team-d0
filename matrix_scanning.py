@@ -28,7 +28,6 @@ TOGGLE_IDX = (5,7)
 #TOGGLE VALUES
 NUM_LOCK = False
 HOLD_TOGGLE = False
-SHIFT_TOGGLE = False
 
 def write_report(device, report):
     filepath = '/dev/hidg{}'.format(device)
@@ -43,20 +42,22 @@ def send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPre
     l_click_pressed = False
     r_click_pressed = False
     for pair in seen:
+        if not (pair in prevSeen and HOLD_TOGGLE):
+            curr_char = char_dict[pair]
+            if (pair == L_CLICK_IDX):
+                l_click_pressed = True
+            elif (pair == R_CLICK_IDX):
+                r_click_pressed = True
+            else:
+                if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
+                    if shiftPressed and pair in alt_char_dict.keys(): # shift is pressed
+                        keyboard_report += chr(alt_char_dict[pair])
+                    elif NUM_LOCK and pair in alt_num_dict.keys():
+                        keyboard_report += chr(alt_num_dict[pair])
+                    else:
+                        keyboard_report += chr(curr_char)
+
         prevSeen.add(pair)
-        curr_char = char_dict[pair]
-        if (pair == L_CLICK_IDX):
-            l_click_pressed = True
-        elif (pair == R_CLICK_IDX):
-            r_click_pressed = True
-        else:
-            if (len(keyboard_report) < KEYBOARD_REPORT_LEN and curr_char != Keycodes.NULL):
-                if (shiftPressed or (HOLD_TOGGLE and SHIFT_TOGGLE)) and pair in alt_char_dict.keys(): # shift is pressed
-                    keyboard_report += chr(alt_char_dict[pair])
-                elif NUM_LOCK and pair in alt_num_dict.keys():
-                    keyboard_report += chr(alt_num_dict[pair])
-                else:
-                    keyboard_report += chr(curr_char)
 
     while len(keyboard_report) < KEYBOARD_REPORT_LEN:
         keyboard_report += NULL_CHAR
@@ -234,11 +235,10 @@ def create_alt_numdict():
     alt_num_dict[(3,4)] = Keycodes.ONE # C
     alt_num_dict[(3,5)] = Keycodes.TWO # K
     alt_num_dict[(3,6)] = Keycodes.THREE # G
-
+aehaehaehaehaeh
     alt_num_dict[(4,5)] = Keycodes.ZERO # W
 
     return alt_num_dict
-
 
 
 def main():
