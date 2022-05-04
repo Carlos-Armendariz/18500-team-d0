@@ -3,6 +3,6 @@
 
 Setup Steps for Keyboard Emulation:
 
-$ sudo bash usb_gadget_script
+$ sudo bash dual_gadget_script
 
 $ sudo python3 matrix_scanning.py
