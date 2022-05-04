@@ -126,30 +126,30 @@ def scan_matrix(rows, cols):
 
                 elif (j,i) in prevSeen:
                     prevSeen.remove((j,i))
-                    if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
-                        release_mouse()
-                    else:
-                        global HOLD_TOGGLE
-                        global SHIFT_TOGGLE
-                        global NUM_LOCK
+                    # if (j,i) == R_CLICK_IDX or (j,i) == L_CLICK_IDX:
+                    #     release_mouse()
+                    # else:
+                    global HOLD_TOGGLE
+                    global SHIFT_TOGGLE
+                    global NUM_LOCK
 
-                        if (j,i) == NUM_LOCK_IDX:
-                            NUM_LOCK = not NUM_LOCK # toggle  on key release
-                        elif (j,i) == TOGGLE_IDX:
-                            HOLD_TOGGLE = not HOLD_TOGGLE # toggle  on key release
-                            if (HOLD_TOGGLE):
-                                SHIFT_TOGGLE = False
-                        elif (j,i) == SHIFT_KEY_IDX and HOLD_TOGGLE:
-                            SHIFT_TOGGLE = not SHIFT_TOGGLE
+                    if (j,i) == NUM_LOCK_IDX:
+                        NUM_LOCK = not NUM_LOCK # toggle  on key release
+                    elif (j,i) == TOGGLE_IDX:
+                        HOLD_TOGGLE = not HOLD_TOGGLE # toggle  on key release
+                        if (HOLD_TOGGLE):
+                            SHIFT_TOGGLE = False
+                    elif (j,i) == SHIFT_KEY_IDX and HOLD_TOGGLE:
+                        SHIFT_TOGGLE = not SHIFT_TOGGLE
                         
-                        release_key()
+                        # release_key()
 
             col.on()
-            time.sleep(0.001)
+            # time.sleep(0.001)
 
         # modifier_byte = get_modifer_byte(shiftPressed, ctrlPressed, altPressed)
-        if len(seen) > 0:
-            send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPressed, ctrlPressed, altPressed)
+        # if len(seen) > 0:
+        send_report(char_dict, alt_char_dict, alt_num_dict, seen, prevSeen, shiftPressed, ctrlPressed, altPressed)
 
 
 def create_chardict():
@@ -235,7 +235,6 @@ def create_alt_numdict():
     alt_num_dict[(3,4)] = Keycodes.ONE # C
     alt_num_dict[(3,5)] = Keycodes.TWO # K
     alt_num_dict[(3,6)] = Keycodes.THREE # G
-aehaehaehaehaeh
     alt_num_dict[(4,5)] = Keycodes.ZERO # W
 
     return alt_num_dict
